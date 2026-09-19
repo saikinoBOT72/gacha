@@ -1,0 +1,14 @@
+{
+  "name": "stella-summon",
+  "version": "1.0.0",
+  "private": true,
+  "description": "ソーシャルゲームのガチャ演出を研究し再現した体験シミュレータ。画像・音声アセット・外部依存ゼロ。",
+  "type": "module",
+  "scripts": {
+    "start": "python3 -m http.server 8777 --bind 127.0.0.1",
+    "test": "node tests/run.mjs"
+  },
+  "keywords": ["gacha", "web-audio", "canvas", "procedural", "game-feel"],
+  "license": "MIT",
+  "engines": { "node": ">=18" }
+}
