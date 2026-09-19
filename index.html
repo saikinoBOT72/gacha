@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="color-scheme" content="dark">
+<meta name="theme-color" content="#05070f">
+<title>星霊召喚 -STELLA SUMMON-</title>
+<meta name="description" content="ソーシャルゲームのガチャ演出を研究して再現した体験シミュレータ。映像も効果音もすべてコードで生成。課金要素はありません。">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ctext y='26' font-size='26'%3E%E2%9C%A6%3C/text%3E%3C/svg%3E">
+<link rel="stylesheet" href="styles/tokens.css">
+<link rel="stylesheet" href="styles/base.css">
+<link rel="stylesheet" href="styles/layout.css">
+<link rel="stylesheet" href="styles/components.css">
+<link rel="stylesheet" href="styles/screens.css">
+<link rel="stylesheet" href="styles/summon.css">
+<link rel="stylesheet" href="styles/effects.css">
+</head>
+<body>
+
+<div id="boot" aria-hidden="true">
+  <div class="boot__mark">✦</div>
+  <div class="boot__title">星霊召喚</div>
+  <div class="boot__sub">STELLA SUMMON</div>
+  <div class="boot__bar"><i></i></div>
+</div>
+
+<div id="world">
+  <div class="canvas-holder" aria-hidden="true">
+    <canvas id="canvas-bg"></canvas>
+    <canvas id="canvas-fx"></canvas>
+  </div>
+
+  <div id="app-ui"></div>
+
+  <div id="summon-layer" hidden></div>
+  <div id="result-layer" hidden></div>
+
+  <div class="canvas-holder canvas-holder--post" aria-hidden="true">
+    <canvas id="canvas-post"></canvas>
+  </div>
+</div>
+
+<div id="overlays"></div>
+<div id="toasts" aria-live="polite"></div>
+
+<noscript>
+  <div style="padding:2rem;color:#e6ebf5;font-family:sans-serif">
+    このアプリは JavaScript を使用します。有効にしてから再読み込みしてください。
+  </div>
+</noscript>
+
+<script type="module" src="src/main.js"></script>
+</body>
+</html>

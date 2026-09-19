@@ -1,0 +1,138 @@
+/* ══════════ レイアウト骨格 ══════════ */
+
+#world {
+  position: fixed; inset: 0;
+  z-index: var(--z-ui);
+  will-change: transform;
+}
+
+/* キャンバスはビューポートより一回り大きい。画面が揺れても端が見えないように。 */
+.canvas-holder {
+  position: absolute; inset: -48px;
+  z-index: var(--z-canvas);
+  pointer-events: none;
+}
+.canvas-holder--post { z-index: var(--z-post); }
+.canvas-holder canvas { position: absolute; inset: 0; }
+
+#app-ui {
+  position: absolute; inset: 0;
+  z-index: var(--z-ui);
+  display: flex; flex-direction: column;
+  transition: opacity var(--t-base) var(--e-out), filter var(--t-base);
+}
+body.is-summoning #app-ui,
+body.has-result #app-ui {
+  opacity: 0; pointer-events: none; filter: blur(6px);
+}
+
+/* ── ヘッダ ── */
+.topbar {
+  flex: 0 0 auto;
+  height: calc(var(--topbar-h) + var(--safe-t));
+  padding: var(--safe-t) calc(var(--s4) + var(--safe-r)) 0 calc(var(--s4) + var(--safe-l));
+  display: flex; align-items: center; gap: var(--s3);
+  background: linear-gradient(180deg, rgba(4, 6, 15, .92), rgba(4, 6, 15, .35) 70%, transparent);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  position: relative; z-index: 3;
+}
+.topbar__brand { display: flex; align-items: center; gap: var(--s2); flex: 0 0 auto; }
+.topbar__mark { color: var(--accent); font-size: 17px; text-shadow: 0 0 14px rgba(143,216,255,.7); }
+.topbar__name {
+  font-family: var(--font-serif); font-size: 15px;
+  letter-spacing: .16em; white-space: nowrap;
+}
+.wallet {
+  flex: 1 1 auto; display: flex; gap: var(--s2);
+  justify-content: flex-end; align-items: center;
+  overflow-x: auto; scrollbar-width: none;
+}
+.wallet::-webkit-scrollbar { display: none; }
+.topbar__daily {
+  flex: 0 0 auto; width: 38px; height: 38px; border-radius: var(--r-full);
+  display: grid; place-items: center;
+  background: var(--surface); border: 1px solid var(--border);
+  color: var(--gold); font-size: 16px; position: relative;
+  transition: transform var(--t-fast) var(--e-back), background var(--t-fast);
+}
+.topbar__daily:active { transform: scale(.9); }
+.topbar__daily.has-badge::after {
+  content: ''; position: absolute; top: 4px; right: 4px;
+  width: 8px; height: 8px; border-radius: 50%;
+  background: #ff5f6d; box-shadow: 0 0 8px #ff5f6d;
+  animation: badgePulse 1.6s ease-in-out infinite;
+}
+@keyframes badgePulse { 0%,100%{transform:scale(1);opacity:1} 50%{transform:scale(1.35);opacity:.6} }
+
+/* ── 画面領域 ── */
+.screens {
+  flex: 1 1 auto;
+  overflow-y: auto; overflow-x: hidden;
+  -webkit-overflow-scrolling: touch;
+  padding: var(--s2) calc(var(--s4) + var(--safe-r)) var(--s7) calc(var(--s4) + var(--safe-l));
+  position: relative; z-index: 2;
+}
+.screen {
+  max-width: 560px; margin: 0 auto;
+  display: flex; flex-direction: column; gap: var(--s4);
+  animation: screenIn var(--t-slow) var(--e-out) both;
+}
+.screen.is-entering { opacity: 0; transform: translateY(10px); }
+@keyframes screenIn { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
+
+/* ── タブバー ── */
+.tabbar {
+  flex: 0 0 auto;
+  height: calc(var(--tabbar-h) + var(--safe-b));
+  padding-bottom: var(--safe-b);
+  display: flex; align-items: stretch;
+  background: linear-gradient(0deg, rgba(4,6,15,.96), rgba(4,6,15,.72) 60%, transparent);
+  backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+  border-top: 1px solid rgba(160, 190, 255, .08);
+  position: relative; z-index: 3;
+}
+.tabbtn {
+  flex: 1 1 0; min-width: 0; min-height: 44px;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: 2px; color: var(--text-faint);
+  transition: color var(--t-fast), transform var(--t-fast) var(--e-back);
+  position: relative;
+}
+.tabbtn__icon { font-size: 18px; line-height: 1; }
+.tabbtn__label { font-size: 10px; letter-spacing: .1em; }
+.tabbtn:active { transform: scale(.92); }
+.tabbtn.is-on { color: var(--accent); }
+.tabbtn.is-on::before {
+  content: ''; position: absolute; top: 0; left: 50%; transform: translateX(-50%);
+  width: 26px; height: 2px; border-radius: 2px;
+  background: linear-gradient(90deg, transparent, var(--accent), transparent);
+  box-shadow: 0 0 12px var(--accent);
+}
+.tabbtn.is-on .tabbtn__icon { text-shadow: 0 0 14px rgba(143,216,255,.8); }
+
+/* ── オーバーレイ ── */
+#overlays { position: fixed; inset: 0; z-index: var(--z-overlay); pointer-events: none; }
+#overlays > * { pointer-events: auto; }
+#toasts {
+  position: fixed; top: calc(var(--safe-t) + 8px); left: 0; right: 0;
+  z-index: var(--z-toast); display: flex; flex-direction: column;
+  align-items: center; gap: var(--s2); pointer-events: none;
+  padding: 0 var(--s4);
+}
+
+#summon-layer {
+  position: absolute; inset: 0; z-index: var(--z-summon);
+  overflow: hidden;
+}
+#result-layer {
+  position: absolute; inset: 0; z-index: var(--z-result);
+  overflow: hidden;
+}
+
+@media (min-width: 720px) {
+  :root { --topbar-h: 62px; --tabbar-h: 68px; }
+  body { font-size: 16px; }
+  .screens { padding-top: var(--s4); }
+  .tabbtn__label { font-size: 11px; }
+}

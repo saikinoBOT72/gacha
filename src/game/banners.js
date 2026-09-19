@@ -86,3 +86,10 @@ export const BANNERS = [
 export const BANNER_BY_ID = new Map(BANNERS.map((b) => [b.id, b]));
 export const bannerById = (id) => BANNER_BY_ID.get(id) || BANNERS[0];
 export const PITY_POOLS = [...new Set(BANNERS.map((b) => b.pityPool))];
+
+/** 天井カウンタのプール名（表示用） */
+export const POOL_LABEL = {
+  limited: '限定祈願',
+  standard: '恒常祈願',
+  stepup: 'ステップアップ祈願',
+};

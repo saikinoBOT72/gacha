@@ -1,0 +1,52 @@
+/* ══════════ グローバルなエフェクト ══════════ */
+
+/* 色収差（JS が --ab を毎フレーム更新する）。
+   カード名など明るい文字に赤/シアンの縁を出して「画面が壊れている」感じを作る。 */
+.cutin__name, .scard__name, .result__title, .sbtn__label {
+  text-shadow:
+    calc(var(--ab) * -1) 0 rgba(255, 60, 60, .55),
+    var(--ab) 0 rgba(60, 220, 255, .55),
+    0 0 30px rgba(255, 255, 255, .35);
+}
+
+/* モーダルが開いている間は背後をわずかに沈める */
+body.has-modal #app-ui { filter: saturate(.85); }
+
+/* ══════════ アクセシビリティ：控えめモード ══════════ */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: .01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: .01ms !important;
+  }
+  .crest-rot-slow, .crest-rot-slow2, .crest-rot-rev,
+  .banner__rays, .scard__back-art { animation: none !important; }
+}
+body.reduce-motion .banner__rays,
+body.reduce-motion .crest-rot-slow,
+body.reduce-motion .crest-rot-slow2,
+body.reduce-motion .crest-rot-rev,
+body.reduce-motion .scard__back-art,
+body.reduce-motion .cutin__streaks { animation: none !important; }
+body.reduce-motion .sbtn--primary .sbtn__shine,
+body.reduce-motion .ccard__sheen { animation: none !important; }
+body.reduce-motion #summon-layer.is-upgrade,
+body.reduce-motion #summon-layer.is-burst { animation: none !important; }
+
+/* ══════════ 共有キーフレーム ══════════ */
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+@keyframes popIn {
+  0% { opacity: 0; transform: scale(.82); }
+  60% { opacity: 1; transform: scale(1.04); }
+  100% { transform: scale(1); }
+}
+@keyframes floatY { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-6px); } }
+
+/* 印刷は想定外だが、白紙より説明を出す */
+@media print {
+  body::before {
+    content: '星霊召喚 -STELLA SUMMON- は画面上での体験を前提としたアプリです。';
+    display: block; padding: 2rem; color: #000;
+  }
+  #world, #overlays, #toasts { display: none; }
+}

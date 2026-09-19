@@ -122,7 +122,9 @@ export class PostFX {
   }
 
   /** post レイヤに描く。 */
-  render(ctx, w, h) {
+  render(ctx, w, h, view) {
+    const oy = view ? view.oy : 0;
+    const vh = view && view.vh ? view.vh : h;
     // ヴィネット
     if (this.vignette > 0.01) {
       const g = ctx.createRadialGradient(w / 2, h / 2, Math.min(w, h) * 0.28, w / 2, h / 2, Math.max(w, h) * 0.78);
@@ -153,10 +155,10 @@ export class PostFX {
 
     // レターボックス
     if (this.letterbox > 0.004) {
-      const bar = h * 0.13 * this.letterbox;
+      const bar = vh * 0.13 * this.letterbox;
       ctx.fillStyle = '#000';
-      ctx.fillRect(0, 0, w, bar);
-      ctx.fillRect(0, h - bar, w, bar);
+      ctx.fillRect(0, 0, w, oy + bar);
+      ctx.fillRect(0, oy + vh - bar, w, h - (oy + vh - bar));
     }
 
     // フラッシュ（最後に。全てを白く飛ばす）

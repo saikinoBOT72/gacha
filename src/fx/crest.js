@@ -75,7 +75,7 @@ export function crestSVG(char, opts = {}) {
 
   /* ── 光輪（★5のみ） ── */
   if (hasHalo) {
-    g.push(`<circle cx="0" cy="0" r="${R * 1.1}" fill="url(#${uidLocal}-halo)"/>`);
+    g.push(`<circle cx="0" cy="0" r="${(R * 1.06).toFixed(1)}" fill="url(#${uidLocal}-halo)"/>`);
   }
 
   /* ── 翼（★4以上） ── */
@@ -84,15 +84,15 @@ export function crestSVG(char, opts = {}) {
     const wing = [];
     for (let i = 0; i < feathers; i++) {
       const t = i / (feathers - 1 || 1);
-      const len = R * (0.55 + t * 0.62);
+      const len = R * (0.48 + t * 0.5);
       const drop = -R * 0.12 + t * R * 0.5;
       const cur = R * (0.28 + t * 0.2);
       wing.push(`<path d="M0,0 C${P(-len * 0.4, drop - cur)} ${P(-len * 0.8, drop - cur * 0.4)} ${P(-len, drop)}
         C${P(-len * 0.75, drop + cur * 0.3)} ${P(-len * 0.35, drop + cur * 0.2)} 0,0 Z"
         fill="url(#${uidLocal}-wing)" opacity="${(0.34 + t * 0.3).toFixed(2)}"/>`);
     }
-    g.push(`<g transform="translate(-6,4)">${wing.join('')}</g>`);
-    g.push(`<g transform="translate(6,4) scale(-1,1)">${wing.join('')}</g>`);
+    g.push(`<g transform="translate(-4,4)">${wing.join('')}</g>`);
+    g.push(`<g transform="translate(4,4) scale(-1,1)">${wing.join('')}</g>`);
   }
 
   /* ── 外周リング群 ── */

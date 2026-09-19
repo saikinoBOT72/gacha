@@ -18,6 +18,10 @@ class Stage {
   constructor() {
     this.ready = false;
     this.w = 0; this.h = 0; this.dpr = 1;
+    // キャンバスはビューポートより一回り大きい（揺れても端が見えないように）。
+    // offsetX/Y は「ビューポート座標 → キャンバス座標」の変換量。
+    this.offsetX = 0; this.offsetY = 0;
+    this.vw = 0; this.vh = 0;
     this.cx = 0; this.cy = 0;      // 召喚の焦点
     this.focusY = 0.46;            // 画面高に対する焦点の位置
     this.particles = new ParticleSystem();
@@ -68,6 +72,10 @@ class Stage {
     const h = Math.max(1, Math.round(rect.height));
     const dpr = Math.min(MAX_DPR, window.devicePixelRatio || 1) * (this.quality < 0.5 ? 0.75 : 1);
     this.w = w; this.h = h; this.dpr = dpr;
+    this.offsetX = -rect.left;
+    this.offsetY = -rect.top;
+    this.vw = window.innerWidth;
+    this.vh = window.innerHeight;
     for (const c of [this.bgC, this.fxC, this.postC]) {
       c.width = Math.round(w * dpr);
       c.height = Math.round(h * dpr);
@@ -76,15 +84,19 @@ class Stage {
     }
     for (const c of [this.bg, this.fx, this.pp]) c.setTransform(dpr, 0, 0, dpr, 0, 0);
     this.cx = w / 2;
-    this.cy = h * this.focusY;
+    this.cy = this.offsetY + this.vh * this.focusY;
     this.starfield.resize(w, h, this.quality);
     this._bgDirty = true;
   }
 
-  setFocus(yRatio) { this.focusY = yRatio; this.cy = this.h * yRatio; }
+  setFocus(yRatio) { this.focusY = yRatio; this.cy = this.offsetY + this.vh * yRatio; }
+
+  /** ビューポート座標（getBoundingClientRect 等）→ キャンバス座標 */
+  vx(x) { return x + this.offsetX; }
+  vy(y) { return y + this.offsetY; }
 
   /** 召喚陣の基準半径。画面サイズに合わせる。 */
-  get radius() { return Math.min(this.w, this.h) * 0.34; }
+  get radius() { return Math.min(this.vw || this.w, this.vh || this.h) * 0.34; }
 
   frame(dt, realDt) {
     if (!this.ready || this.paused) return;
@@ -141,7 +153,7 @@ class Stage {
       pp.filter = 'none';
       pp.restore();
     }
-    this.post.render(pp, w, h);
+    this.post.render(pp, w, h, { ox: this.offsetX, oy: this.offsetY, vw: this.vw, vh: this.vh });
 
     // DOM 側の色収差用（CSS が参照する）
     if (this.shakeEl) {
